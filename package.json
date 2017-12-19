@@ -1,0 +1,37 @@
+{
+  "name": "node-cryptonight",
+  "version": "1.0.0",
+  "description": "node bindings for cryptonight hashing",
+  "main": "index.js",
+  "gypfile": true,
+  "scripts": {
+    "lint": "standard",
+    "rebuild": "node-gyp rebuild",
+    "test": "standard && jest"
+  },
+  "keywords": [
+    "cryptonight",
+    "hash",
+    "monero",
+    "native"
+  ],
+  "author": "Excitable Aardvark <excitableaardvark@tutanota.de>",
+  "license": "BSDv3",
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/ExcitableAardvark/node-cryptonight.git"
+  },
+  "bugs": {
+    "url": "https://github.com/ExcitableAardvark/node-cryptonight/issues"
+  },
+  "homepage": "https://github.com/ExcitableAardvark/node-cryptonight#readme",
+  "dependencies": {
+    "bindings": "^1.3.0",
+    "nan": "^2.8.0",
+    "node-gyp": "^3.6.2"
+  },
+  "devDependencies": {
+    "jest": "^22.0.3",
+    "standard": "^10.0.3"
+  }
+}
