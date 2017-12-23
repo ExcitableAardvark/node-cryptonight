@@ -1,6 +1,14 @@
 # node-cryptonight
 > node bindings for cryptonight hashing
 
+### Requirements
+
+node-cryptonight requires [Boost](http://www.boost.org) and [OpenSSL](https://www.openssl.org/)
+
+##### Ubuntu
+
+    sudo apt-get install libboost-all-dev libssl-dev
+
 ### Installation
 
     npm install --save node-cryptonight
