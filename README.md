@@ -3,11 +3,11 @@
 
 ### Requirements
 
-node-cryptonight requires [Boost](http://www.boost.org) and [OpenSSL](https://www.openssl.org/)
+node-cryptonight requires [Boost](http://www.boost.org)
 
 ##### Ubuntu
 
-    sudo apt-get install libboost-all-dev libssl-dev
+    sudo apt-get install libboost-all-dev
 
 ### Installation
 
