@@ -51,6 +51,10 @@ cryptonight(Buffer.from('This is a test'))
   .then(console.log) // <Buffer a0 84 f0 1d 14 37 ..>
 ```
 
+### See Also
+
+* [node-cryptonight-lite](https://github.com/ExcitableAardvark/node-cryptonight-lite)
+
 ### License
 
 Released under the 3-Clause BSD License. Contains code from the Monero project. See `LICENSE` for more information.
