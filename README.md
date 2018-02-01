@@ -9,6 +9,10 @@ node-cryptonight requires [Boost](http://www.boost.org)
 
     sudo apt-get install libboost-all-dev
 
+##### Mac
+
+    brew install boost
+
 ### Installation
 
     npm install --save node-cryptonight

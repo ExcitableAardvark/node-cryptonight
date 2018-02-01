@@ -5,6 +5,13 @@
       "include_dirs": [
 	"<!(node -e \"require('nan')\")"
       ],
+      "xcode_settings": {
+        "OTHER_CFLAGS": [
+          "-maes",
+          "-Ofast",
+          "-fexceptions"
+        ]
+      },
       "cflags": [
         "-maes",
         "-Ofast",
