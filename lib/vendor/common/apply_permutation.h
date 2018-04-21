@@ -1,4 +1,4 @@
-// Copyright (c) 2017, The Monero Project
+// Copyright (c) 2017-2018, The Monero Project
 // 
 // All rights reserved.
 // 
@@ -29,6 +29,8 @@
 // Most of this file is originally copyright (c) 2017 Raymond Chen, Microsoft
 // This algorithm is adapted from Raymond Chen's code:
 // https://blogs.msdn.microsoft.com/oldnewthing/20170109-00/?p=95145
+
+#pragma once
 
 #include <vector>
 #include <functional>

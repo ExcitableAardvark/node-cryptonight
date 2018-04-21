@@ -1,4 +1,4 @@
-// Copyright (c) 2016, The Monero Project
+// Copyright (c) 2016-2018, The Monero Project
 //
 // All rights reserved.
 //
@@ -28,7 +28,10 @@
 
 #if !defined __GNUC__ || defined __MINGW32__ || defined __MINGW64__ || defined __ANDROID__
 #define USE_UNWIND
+#else
+#define ELPP_FEATURE_CRASH_LOG 1
 #endif
+#include "easylogging++/easylogging++.h"
 
 #include <stdexcept>
 #ifdef USE_UNWIND

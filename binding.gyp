@@ -21,7 +21,7 @@
         "lib/cryptonight.cc",
         "lib/vendor/aesb.c",
         "lib/vendor/blake256.c",
-        "lib/vendor/chacha8.c",
+        "lib/vendor/chacha.c",
         "lib/vendor/crypto-ops-data.c",
         "lib/vendor/crypto-ops.c",
         "lib/vendor/groestl.c",

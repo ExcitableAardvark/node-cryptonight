@@ -1,4 +1,4 @@
-// Copyright (c) 2017, The Monero Project
+// Copyright (c) 2017-2018, The Monero Project
 //
 // All rights reserved.
 //
@@ -25,6 +25,7 @@
 // INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
 // STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF
 // THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+#include "misc_log_ex.h"
 #include "common/threadpool.h"
 
 #include <cassert>
@@ -33,6 +34,8 @@
 
 #include "cryptonote_config.h"
 #include "common/util.h"
+
+static __thread int depth = 0;
 
 namespace tools
 {
@@ -60,11 +63,13 @@ threadpool::~threadpool() {
 void threadpool::submit(waiter *obj, std::function<void()> f) {
   entry e = {obj, f};
   boost::unique_lock<boost::mutex> lock(mutex);
-  if (active == max && !queue.empty()) {
+  if ((active == max && !queue.empty()) || depth > 0) {
     // if all available threads are already running
     // and there's work waiting, just run in current thread
     lock.unlock();
+    ++depth;
     f();
+    --depth;
   } else {
     if (obj)
       obj->inc();
@@ -75,6 +80,23 @@ void threadpool::submit(waiter *obj, std::function<void()> f) {
 
 int threadpool::get_max_concurrency() {
   return max;
+}
+
+threadpool::waiter::~waiter()
+{
+  {
+    boost::unique_lock<boost::mutex> lock(mt);
+    if (num)
+      MERROR("wait should have been called before waiter dtor - waiting now");
+  }
+  try
+  {
+    wait();
+  }
+  catch (const std::exception &e)
+  {
+    /* ignored */
+  }
 }
 
 void threadpool::waiter::wait() {
@@ -106,7 +128,9 @@ void threadpool::run() {
     e = queue.front();
     queue.pop_front();
     lock.unlock();
+    ++depth;
     e.f();
+    --depth;
 
     if (e.wo)
       e.wo->dec();

@@ -31,11 +31,27 @@ const hash = cryptonight(Buffer.from('This is a test'))
 console.log(hash) // <Buffer a0 84 f0 1d 14 37 ..>
 ```
 
+##### Synchronous Hashing with variant 1
+
+```js
+const cryptonight = require('node-cryptonight').hash
+const hash = cryptonight(Buffer.from('This is a test'), 1)
+console.log(hash) // <Buffer a0 84 f0 1d 14 37 ..>
+```
+
 ##### Asynchronous Hashing
 
 ```js
 const cryptonight = require('node-cryptonight').asyncHash
 cryptonight(Buffer.from('This is a test'), hash => {
+  console.log(hash) // <Buffer a0 84 f0 1d 14 37 ..>
+})
+```
+##### Asynchronous Hashing with variant 1
+
+```js
+const cryptonight = require('node-cryptonight').asyncHash
+cryptonight(Buffer.from('This is a test'), 1, hash => {
   console.log(hash) // <Buffer a0 84 f0 1d 14 37 ..>
 })
 ```
