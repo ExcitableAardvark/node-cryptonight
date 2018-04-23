@@ -37,29 +37,43 @@ using namespace node;
 using namespace v8;
 
 NAN_METHOD(Hash) {
-	if (info.Length() != 1)
-		return Nan::ThrowError("Argument must be a buffer");
-	
-	Local<Object> buf = info[0]->ToObject();
+	Local<Object> buf;
+	uint32_t variant = 0;
 
-	if (!Buffer::HasInstance(buf))
-		return Nan::ThrowError("Argument must be a buffer");
+	switch (info.Length()) {
+		case 2:
+			if (info[1]->IsUint32())
+				variant = info[1]->Int32Value();
+			else
+				return Nan::ThrowError("Second argument must be a number");
+		case 1:
+			buf = info[0]->ToObject();
+			if (!Buffer::HasInstance(buf))
+				return Nan::ThrowError("The first argument must be a buffer");
+			if (variant > 0 && Buffer::Length(buf) < 43)
+				return Nan::ThrowError("Buffer must be at least 43 bytes when variant > 0 is defined");
+			break;
+		case 0:
+			return Nan::ThrowError("You must provide at least a buffer");
+		default:
+			return Nan::ThrowError("Invalid number of arguments.");
+	}
 
 	hash x;
 
-	cn_slow_hash(Buffer::Data(buf), Buffer::Length(buf), x);
+	cn_slow_hash(Buffer::Data(buf), Buffer::Length(buf), x, variant);
 
 	info.GetReturnValue().Set(CopyBuffer(x.data, 32).ToLocalChecked());
 }
 
 class CnWorker : public AsyncWorker {
 public:
-	CnWorker(Callback *callback, char *data, int length)
-		 : AsyncWorker(callback), data(data), length(length) {}
+	CnWorker(Callback *callback, char *data, int length, int variant)
+		 : AsyncWorker(callback), data(data), length(length), variant(variant) {}
 	~CnWorker() {}
 
 	void Execute() {
-		cn_slow_hash(data, length, hresult);
+		cn_slow_hash(data, length, hresult, variant);
 	}
 
 	void HandleOKCallback() {
@@ -73,24 +87,46 @@ public:
 private:
 	char *data;
 	int length;
+	int variant;
 	hash hresult;
 };
 
 NAN_METHOD(AsyncHash) {
-	if (info.Length() != 2)
-		return Nan::ThrowError("Arguments must be a buffer and a callback");
-	
-	Local<Object> buf = info[0]->ToObject();
+	Local<Object> buf;
+	uint32_t variant = 0;
+	Callback *callback;
 
-	if (!Buffer::HasInstance(buf))
-		return Nan::ThrowError("Arguments must be a buffer and a callback");
+	switch (info.Length()) {
+		case 3:
+			callback = new Callback(To<Function>(info[2]).ToLocalChecked());
+		case 2:
+			if (info.Length() == 3) {
+				if (info[1]->IsUint32())
+					variant = info[1]->Int32Value();
+				else 
+					return Nan::ThrowError("Second argument must be a number");
+			} else {
+				callback = new Callback(To<Function>(info[1]).ToLocalChecked());
+			}
+			buf = info[0]->ToObject();
+			if (!Buffer::HasInstance(buf))
+				return Nan::ThrowError("The first argument must be a buffer");
+			if (variant > 0 && Buffer::Length(buf) < 43)
+				return Nan::ThrowError("Buffer must be at least 43 bytes when variant > 0 is defined");
+			break;
+		case 1:
+		case 0:
+			return Nan::ThrowError("You must provide at least a buffer and a callback");
+		default:
+			return Nan::ThrowError("Invalid number of arguments.");
+	}
 
 	char *data = Buffer::Data(buf);
 	int len = Buffer::Length(buf);
 
-	Callback *callback = new Callback(To<Function>(info[1]).ToLocalChecked());
+	 
 
-	AsyncQueueWorker(new CnWorker(callback, data, len));
+	AsyncQueueWorker(new CnWorker(callback, data, len, variant));
 }
 
 NAN_MODULE_INIT(CnInit) {

@@ -1,4 +1,4 @@
-// Copyright (c) 2014-2017, The Monero Project
+// Copyright (c) 2014-2018, The Monero Project
 // 
 // All rights reserved.
 // 
@@ -28,6 +28,7 @@
 // 
 // Parts of this file are originally copyright (c) 2012-2013 The Cryptonote developers
 
+#include <unistd.h>
 #include <cassert>
 #include <cstddef>
 #include <cstdint>
@@ -42,6 +43,18 @@
 #include "warnings.h"
 #include "crypto.h"
 #include "hash.h"
+
+namespace {
+  static void local_abort(const char *msg)
+  {
+    fprintf(stderr, "%s\n", msg);
+#ifdef NDEBUG
+    _exit(1);
+#else
+    abort();
+#endif
+  }
+}
 
 namespace crypto {
 
@@ -94,7 +107,7 @@ namespace crypto {
 
   /* 
    * generate public and secret keys from a random 256-bit integer
-   * TODO: allow specifiying random value (for wallet recovery)
+   * TODO: allow specifying random value (for wallet recovery)
    * 
    */
   secret_key crypto_ops::generate_keys(public_key &pub, secret_key &sec, const secret_key& recovery_key, bool recover) {
@@ -467,7 +480,7 @@ POP_WARNINGS
     ec_scalar sum, k, h;
     boost::shared_ptr<rs_comm> buf(reinterpret_cast<rs_comm *>(malloc(rs_comm_size(pubs_count))), free);
     if (!buf)
-      abort();
+      local_abort("malloc failure");
     assert(sec_index < pubs_count);
 #if !defined(NDEBUG)
     {
@@ -486,7 +499,7 @@ POP_WARNINGS
     }
 #endif
     if (ge_frombytes_vartime(&image_unp, &image) != 0) {
-      abort();
+      local_abort("invalid key image");
     }
     ge_dsm_precomp(image_pre, &image_unp);
     sc_0(&sum);
@@ -505,7 +518,7 @@ POP_WARNINGS
         random_scalar(sig[i].c);
         random_scalar(sig[i].r);
         if (ge_frombytes_vartime(&tmp3, &*pubs[i]) != 0) {
-          abort();
+          local_abort("invalid pubkey");
         }
         ge_double_scalarmult_base_vartime(&tmp2, &sig[i].c, &tmp3, &sig[i].r);
         ge_tobytes(&buf->ab[i].a, &tmp2);
