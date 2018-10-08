@@ -67,6 +67,14 @@ test('async hash of test string with variant 1', done => {
   })
 })
 
+test('async hash of test string with variant 2', done => {
+  return cryptonight.asyncHash(Buffer.from('This is a test This is a test This is a test'), 2, data => {
+    expect(data.toString('hex'))
+      .toBe('353fdc068fd47b03c04b9431e005e00b68c2168a3cc7335c8b9b308156591a4f')
+    done()
+  })
+})
+
 test('async hash of test string with variant 0', done => {
   return cryptonight.asyncHash(Buffer.from('This is a test'), 0, data => {
     expect(data.toString('hex'))
@@ -113,6 +121,11 @@ test('sync hash of empty string with variant 1', () => {
 test('sync hash of test string with variant 1', () => {
   expect(cryptonight.hash(Buffer.from('This is a test which as at least 43 bytes ...'), 1).toString('hex'))
     .toBe('bf1b87e049bfe1c668c44f2dc1bb689abcc729a704fc8088917cfbca202fc3cb')
+})
+
+test('sync hash of test string with variant 2', () => {
+  expect(cryptonight.hash(Buffer.from('This is a test This is a test This is a test'), 2).toString('hex'))
+    .toBe('353fdc068fd47b03c04b9431e005e00b68c2168a3cc7335c8b9b308156591a4f')
 })
 
 test('sync invalid argument throws exception', () => {
