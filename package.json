@@ -1,6 +1,6 @@
 {
   "name": "node-cryptonight",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "description": "node bindings for cryptonight hashing",
   "main": "index.js",
   "gypfile": true,
