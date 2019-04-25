@@ -128,6 +128,11 @@ test('sync hash of test string with variant 2', () => {
     .toBe('353fdc068fd47b03c04b9431e005e00b68c2168a3cc7335c8b9b308156591a4f')
 })
 
+test('sync hash of test string with variant 4', () => {
+  expect(cryptonight.hash(Buffer.from('5468697320697320612074657374205468697320697320612074657374205468697320697320612074657374'), 2).toString('hex'))
+    .toBe('f759588ad57e758467295443a9bd71490abff8e9dad1b95b6bf2f5d0d78387bc')
+})
+
 test('sync invalid argument throws exception', () => {
   expect(() => cryptonight.hash('not a buffer'))
     .toThrow(/buffer/)
