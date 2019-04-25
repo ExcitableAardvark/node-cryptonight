@@ -34,7 +34,9 @@
         "lib/vendor/jh.c",
         "lib/vendor/keccak.c",
         "lib/vendor/skein.c",
-        "lib/vendor/slow-hash.c"
+        "lib/vendor/slow-hash.c",
+        "lib/vendor/CryptonightR_JIT.c",
+        "lib/vendor/CryptonightR_template.S"
       ]
     }
   ]

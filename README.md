@@ -3,15 +3,16 @@
 
 ### Requirements
 
-node-cryptonight requires [Boost](http://www.boost.org)
+node-cryptonight requires [Boost](http://www.boost.org) and [Sodium](http://libsodium.org)
 
 ##### Ubuntu
 
-    sudo apt-get install libboost-all-dev
+    sudo apt-get install libboost-all-dev libsodium-dev
 
 ##### Mac
 
     brew install boost
+    brew install libsodium
 
 ### Installation
 
@@ -39,6 +40,14 @@ const hash = cryptonight(Buffer.from('This is a test'), 1)
 console.log(hash) // <Buffer a0 84 f0 1d 14 37 ..>
 ```
 
+##### Synchronous Hashing with variant 4 and height 123
+
+```js
+const cryptonight = require('node-cryptonight').hash
+const hash = cryptonight(Buffer.from('This is a test'), 1, 123)
+console.log(hash) // <Buffer a0 84 f0 1d 14 37 ..>
+```
+
 ##### Asynchronous Hashing
 
 ```js
@@ -52,6 +61,14 @@ cryptonight(Buffer.from('This is a test'), hash => {
 ```js
 const cryptonight = require('node-cryptonight').asyncHash
 cryptonight(Buffer.from('This is a test'), 1, hash => {
+  console.log(hash) // <Buffer a0 84 f0 1d 14 37 ..>
+})
+```
+##### Asynchronous Hashing with variant 4 and height
+
+```js
+const cryptonight = require('node-cryptonight').asyncHash
+cryptonight(Buffer.from('This is a test'), 4, 123, hash => {
   console.log(hash) // <Buffer a0 84 f0 1d 14 37 ..>
 })
 ```
