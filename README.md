@@ -64,7 +64,7 @@ cryptonight(Buffer.from('This is a test'), 1, hash => {
   console.log(hash) // <Buffer a0 84 f0 1d 14 37 ..>
 })
 ```
-##### Asynchronous Hashing with variant 4 and height
+##### Asynchronous Hashing with variant 4 and height 123
 
 ```js
 const cryptonight = require('node-cryptonight').asyncHash
