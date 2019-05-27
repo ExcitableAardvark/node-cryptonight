@@ -44,12 +44,12 @@ NAN_METHOD(Hash) {
 	switch (info.Length()) {
 		case 3:
 			if (info[2]->IsUint32())
-				height = info[2]->Int32Value();
+			  height = info[2]->Int32Value(Nan::GetCurrentContext()).ToChecked();
 			else
 				return Nan::ThrowError("Third argument must be a number");			
 		case 2:
 			if (info[1]->IsUint32()) {
-				variant = info[1]->Int32Value();
+				variant = info[1]->Int32Value(Nan::GetCurrentContext()).ToChecked();
 				if (variant >= 4 && info.Length() == 2) {
 					return Nan::ThrowError("When variant is 4 or higher, height is required.");
 				}
@@ -57,7 +57,7 @@ NAN_METHOD(Hash) {
 				return Nan::ThrowError("Second argument must be a number");
 			}
 		case 1:
-			buf = info[0]->ToObject();
+			buf = info[0]->ToObject(Nan::GetCurrentContext()).ToLocalChecked();
 			if (!Buffer::HasInstance(buf))
 				return Nan::ThrowError("The first argument must be a buffer");
 			if (variant > 0 && Buffer::Length(buf) < 43)
@@ -117,7 +117,7 @@ NAN_METHOD(AsyncHash) {
 		case 3:
 			if (info.Length() >= 4) {
 				if (info[2]->IsUint32())
-					height = info[2]->Int32Value();
+					height = info[2]->Int32Value(Nan::GetCurrentContext()).ToChecked();
 				else
 					return Nan::ThrowError("Third argument must be a number");
 			} else {
@@ -129,7 +129,7 @@ NAN_METHOD(AsyncHash) {
 		case 2:
 			if (info.Length() >= 3) {
 				if (info[1]->IsUint32()) {
-					variant = info[1]->Int32Value();
+					variant = info[1]->Int32Value(Nan::GetCurrentContext()).ToChecked();
 					if (variant >= 4 && info.Length() == 3) {
 						return Nan::ThrowError("When variant is 4 or higher, height is required.");
 					}
@@ -139,7 +139,7 @@ NAN_METHOD(AsyncHash) {
 			} else {
 				callback = new Callback(To<Function>(info[1]).ToLocalChecked());
 			}
-			buf = info[0]->ToObject();
+			buf = info[0]->ToObject(Nan::GetCurrentContext()).ToLocalChecked();
 			if (!Buffer::HasInstance(buf))
 				return Nan::ThrowError("The first argument must be a buffer");
 			if (variant > 0 && Buffer::Length(buf) < 43)
