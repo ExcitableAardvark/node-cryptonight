@@ -1,4 +1,4 @@
-// Copyright (c) 2014-2018, The Monero Project
+// Copyright (c) 2014-2019, The Monero Project
 // 
 // All rights reserved.
 // 
@@ -34,14 +34,6 @@
 
 #include "hash-ops.h"
 
-#ifdef _MSC_VER
-#include <malloc.h>
-#elif !defined(__FreeBSD__) && !defined(__OpenBSD__) && !defined(__DragonFly__)
- #include <alloca.h>
-#else
- #include <stdlib.h>
-#endif
-
 /*** 
 * Round to power of two, for count>=3 and for count being not too large (as reasonable for tree hash calculations)
 */
@@ -67,7 +59,7 @@ size_t tree_hash_cnt(size_t count) {
 }
 
 void tree_hash(const char (*hashes)[HASH_SIZE], size_t count, char *root_hash) {
-// The blockchain block at height 202612 http://monerochain.info/block/bbd604d2ba11ba27935e006ed39c9bfdd99b76bf4a50654bc1e1e61217962698
+// The blockchain block at height 202612 https://moneroblocks.info/block/202612
 // contained 514 transactions, that triggered bad calculation of variable "cnt" in the original version of this function
 // as from CryptoNote code.
 //
@@ -90,9 +82,8 @@ void tree_hash(const char (*hashes)[HASH_SIZE], size_t count, char *root_hash) {
 
     size_t cnt = tree_hash_cnt( count );
 
-    char (*ints)[HASH_SIZE];
-    size_t ints_size = cnt * HASH_SIZE;
-    ints = alloca(ints_size); 	memset( ints , 0 , ints_size);  // allocate, and zero out as extra protection for using uninitialized mem
+    char ints[cnt][HASH_SIZE];
+    memset(ints, 0 , sizeof(ints));  // zero out as extra protection for using uninitialized mem
 
     memcpy(ints, hashes, (2 * cnt - count) * HASH_SIZE);
 
